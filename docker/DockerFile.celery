@@ -1,0 +1,15 @@
+FROM python:3.11-bullseye
+
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 git  -y
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
+# run after deps have been installed
+RUN pip3 install --no-cache-dir 'git+https://github.com/facebookresearch/detectron2.git'
+
+
+COPY . .
+
+ENTRYPOINT [ "celery", "-A", "process", "worker", "-l", "info" ]
