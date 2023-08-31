@@ -30,10 +30,9 @@ The idea is to make a video proccessing service
 6. if status is done the user can retrieve the results 
 
 REST endpoints:
-GET /tasks - returns a list of running tasks
+GET /tasks - returns a list of ids of all tasks
 POST /taks - recieves a video and creates a new task
-GET /tasks/{uid} - return a specific task and it's compact results
-GET /tasks/{uid}/results - returns results in full
+GET /tasks/{uid} - return a specific task and it's results
 """
 
 @app.route("/ping")

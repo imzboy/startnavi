@@ -1,8 +1,11 @@
+import os
+
 from flask import abort
 
 from tasks.enums import ContentTypes, Statuses
 from tasks.models import VideoProcessTask
 
+RESULT_EXPIRE_TIME = os.getenv("RESULT_EXPIRE_TIME", 120)
 
 
 class TaskProccesingOrchestrator:
@@ -30,7 +33,7 @@ class TaskProccesingOrchestrator:
         # get the correct task type
         process = task.proccessing_task
         # start the processing and set the task_id for future lookups
-        process.apply_async(args=[file.read()], task_id=task.pk)
+        process.apply_async(args=[file.read(), task.pk], task_id=task.pk)
         return task.pk
 
 
@@ -40,4 +43,6 @@ class TaskProccesingOrchestrator:
         task_type = cls._content_type_to_process_type.get(content_type)
         task = task_type.get(task_id)
         task.status = Statuses.FINNISHED
+        # set the expire time of the finished task
+        task.expire(RESULT_EXPIRE_TIME)
         task.save()
