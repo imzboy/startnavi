@@ -13,6 +13,10 @@ an input video received by HTTP request.
 # How to run
 
 ```
+cp .env.example .env
+```
+
+```
 docker-compose build
 ```
 then
